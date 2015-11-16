@@ -1,0 +1,57 @@
+// If you would like more information on the gradle-appengine-plugin please refer to the github page
+// https://github.com/GoogleCloudPlatform/gradle-appengine-plugin
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+    }
+    dependencies {
+        //classpath 'com.google.appengine:gradle-appengine-plugin:1.9.18'
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE"
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
+        classpath("commons-io:commons-io:1.4")
+    }
+}
+
+repositories {
+    jcenter();
+    mavenCentral()
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: "io.spring.dependency-management"
+//apply plugin: 'appengine'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-aws:1.0.3.RELEASE'
+    }
+}
+
+dependencies {
+    //appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.18'
+    compile 'org.springframework.cloud:spring-cloud-starter-aws'
+    compile 'javax.servlet:servlet-api:2.5'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile("com.squareup.retrofit:retrofit:1.6.0")
+    compile group: 'com.google.guava', name: 'guava', version: '12.0'
+    compile("commons-fileupload:commons-fileupload:1.2.1")
+    compile("commons-io:commons-io:1.4")
+}
+
+/*appengine {
+    downloadSdk = true
+    appcfg {
+        oauth2 = true
+    }
+}*/
