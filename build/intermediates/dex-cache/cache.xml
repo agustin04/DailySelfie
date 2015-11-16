@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit\retrofit\1.9.0\a681c044244d9fc375198588297a39ba78028423\retrofit-1.9.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\retrofit-1.9.0-b928b8d377d364004b65914409fc8a213787139f.jar" />
+    </item>
+    <item
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.3.0\2e7bc7033dc2c8423e661224171b3133fb155b28\okhttp-2.3.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="2e7bc7033dc2c8423e661224171b3133fb155b28">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\okhttp-2.3.0-319c2b9e42644266c7299b9ad0f1bb84b1e74064.jar" />
+    </item>
+    <item
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.3.0\1b355f73402020c5a0dcca58affc3ec3dfeabac1\okio-1.3.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1b355f73402020c5a0dcca58affc3ec3dfeabac1">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\okio-1.3.0-23b6cba800eb42df22f9fe8ca8e7c8e3aca3fd12.jar" />
+    </item>
+    <item
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3.1\ecb6e1f8e4b0e84c4b886c2f14a1500caf309757\gson-2.3.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\gson-2.3.1-3ea520d1ba1f0bf9253660ffa57b69a70b8a84fe.jar" />
+    </item>
+
+</items>
