@@ -1,5 +1,6 @@
 package com.example.sgarcia.selfieserver.backend.controller;
 
+import com.example.sgarcia.selfieserver.backend.beans.Selfie;
 import com.example.sgarcia.selfieserver.backend.client.SelfieServerApi;
 import com.example.sgarcia.selfieserver.backend.util.ColorAlteration;
 import com.google.common.io.ByteStreams;
@@ -23,10 +24,14 @@ import java.io.InputStream;
 @Controller
 public class SelfieServer{
 
+    @RequestMapping(value=SelfieServerApi.IMAGE_SVC_PATH, method=RequestMethod.GET)
+    public @ResponseBody String getImage() {
+
+        return "test";
+    }
     @RequestMapping(value=SelfieServerApi.IMAGE_SVC_PATH, method= RequestMethod.POST)
-    public @ResponseBody byte[] getImage(@RequestParam("filter") String name,
-                           @RequestBody String encodedFile) {
-        System.out.println("ENTERING to get Image filter:"+name);
+    public @ResponseBody Selfie getImage(@RequestBody Selfie selfie) {
+        System.out.println("ENTERING to get Image filter:"+selfie);
         BufferedImage filterImage = null;
         /*if (!file.isEmpty()) {
             try {
@@ -47,7 +52,7 @@ public class SelfieServer{
 
         //pictureOut = ColorAlteration.convertToBytes(filterImage);
 
-        return pictureOut;
+        return selfie;
     }
 }
 

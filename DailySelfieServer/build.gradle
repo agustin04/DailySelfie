@@ -2,21 +2,30 @@
 // https://github.com/GoogleCloudPlatform/gradle-appengine-plugin
 
 buildscript {
+    ext {
+        springBootVersion = '1.0.2.RELEASE'
+    }
     repositories {
+        maven { url "http://repo.spring.io/libs-snapshot" }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath 'com.google.appengine:gradle-appengine-plugin:1.9.18'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE")
     }
 }
 
 repositories {
     jcenter();
     mavenCentral();
+    maven { url "http://repo.spring.io/libs-snapshot" }
+    maven { url "http://maven.springframework.org/milestone" }
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
 apply plugin: 'war'
 apply plugin: 'appengine'
 
@@ -24,24 +33,35 @@ apply plugin: 'appengine'
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
+war {
+    baseName = 'gs-convert-jar-to-war'
+    version =  '0.1.0'
+}
+
 dependencies {
     appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.18'
     compile 'javax.servlet:servlet-api:2.5'
     compile("com.squareup.retrofit:retrofit:1.9.0")
-    compile("org.springframework:spring-aop:4.0.0.RELEASE")
-    compile("org.springframework:spring-context:4.0.0.RELEASE")
-    compile("org.springframework:spring-beans:4.0.0.RELEASE")
-    compile("org.springframework:spring-context-support:4.0.0.RELEASE")
-    compile("org.springframework:spring-core:4.0.0.RELEASE")
-    compile("org.springframework:spring-expression:4.0.0.RELEASE")
-    compile("org.springframework:spring-web:4.0.0.RELEASE")
-    compile("org.springframework:spring-webmvc:4.0.0.RELEASE")
-    compile group: 'com.google.guava', name: 'guava', version: '12.0'
+
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    providedRuntime("org.springframework.boot:spring-boot-starter-jetty:${springBootVersion}")
+
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    compile("com.google.guava:guava:17.0")
 }
+
 
 appengine {
     downloadSdk = true
     appcfg {
         oauth2 = true
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
 }

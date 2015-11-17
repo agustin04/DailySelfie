@@ -39,4 +39,9 @@ public class Selfie {
     public void setEncodedImage(String encodedImage) {
         this.encodedImage = encodedImage;
     }
+
+    @Override
+    public String toString() {
+        return "Name:"+name+", filter type:"+filterType+", BODY: "+encodedImage;
+    }
 }
