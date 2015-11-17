@@ -4,30 +4,26 @@
 buildscript {
     repositories {
         jcenter()
-        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.18'
     }
 }
 
 repositories {
     jcenter();
-    mavenCentral()
 }
 
 apply plugin: 'java'
+apply plugin: 'war'
 apply plugin: 'appengine'
-
-
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
-
 dependencies {
     appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.18'
     compile 'javax.servlet:servlet-api:2.5'
-    compile("com.squareup.retrofit:retrofit:1.6.0")
-    compile group: 'com.google.guava', name: 'guava', version: '12.0'
-    compile 'org.springframework.boot:spring-boot-starter-web'
 }
 
 appengine {

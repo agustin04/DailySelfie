@@ -4,13 +4,11 @@
    https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/HelloWorld
 */
 
-package com.example.sgarcia.dailyselfie.server;
+package com.example.sgarcia.selfieserver.backend;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 public class MyServlet extends HttpServlet {
     @Override

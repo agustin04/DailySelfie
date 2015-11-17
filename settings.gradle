@@ -1,1 +1,1 @@
-include ':app', ':SelfieServer'
+include ':app', ':DailySelfieServer'

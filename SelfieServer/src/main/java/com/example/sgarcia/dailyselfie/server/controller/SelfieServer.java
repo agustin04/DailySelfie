@@ -24,8 +24,8 @@ public class SelfieServer{
 
 
     @RequestMapping(value=SelfieServerApi.IMAGE_SVC_PATH, method= RequestMethod.POST)
-    public @ResponseBody byte[] getImage(@RequestParam("name") String name,
-                           @RequestParam("file") MultipartFile file){
+    public @ResponseBody byte[] getImage(@RequestParam("filter") String name,
+                           @RequestParam("picture") String encodedFile){
         System.out.println("ENTERING to get Image filter:"+name);
         BufferedImage filterImage = null;
         /*if (!file.isEmpty()) {
