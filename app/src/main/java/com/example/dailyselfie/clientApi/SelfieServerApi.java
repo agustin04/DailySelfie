@@ -14,7 +14,8 @@ import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
 public interface SelfieServerApi {
-    public static final String SERVER_URL = "http://1.dailyserver-1116.appspot.com";
+    //public static final String SERVER_URL = "http://1.dailyserver-1116.appspot.com";
+    public static final String SERVER_URL = "http://dailyselfieserver-env.elasticbeanstalk.com";
     public static final String IMAGE_SVC_PATH = "/image";
 
     public static final int FILTER_GRAY = 1;

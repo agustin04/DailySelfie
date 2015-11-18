@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -20,6 +21,8 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.RestAdapter;
@@ -39,7 +42,7 @@ public class FilterService extends Service {
     public FilterService() {
         super();
 
-        sMatrix.preScale(1, -1);
+        sMatrix.preScale(-1, 1);
         // Start up the thread running the service.
 
         //Setting OkHTTPClient
@@ -85,6 +88,15 @@ public class FilterService extends Service {
         mServiceHandler.sendMessage(msg);
     }
 
+    public void applyEffects(List<SelfieBean> pics, List<Integer> filterTypes){
+        Message msg = mServiceHandler.obtainMessage(ServiceThread.FILTER_MULTIPLE_PICS);
+        msg.obj = pics;
+        Bundle bundle = new Bundle();
+        bundle.putIntegerArrayList("filters_extra", (ArrayList<Integer>)filterTypes);
+        msg.setData(bundle);
+        mServiceHandler.sendMessage(msg);
+    }
+
     public class LocalBinder extends Binder{
         public FilterService getService(){
             return FilterService.this;
@@ -94,7 +106,8 @@ public class FilterService extends Service {
     //Thread to manage the reception of Video Frames and Audio chunks.
     private class ServiceThread extends HandlerThread implements Handler.Callback {
         public static final int FILTER_PIC = 1;
-        public static final int END_SERVICE = 2;
+        public static final int FILTER_MULTIPLE_PICS = 2;
+        public static final int END_SERVICE = 3;
 
         public ServiceThread() {
             super("FilterService");
@@ -115,12 +128,11 @@ public class FilterService extends Service {
         public boolean handleMessage(Message msg) {
 
             SelfieBean response = null;
+            if(mUIHandler == null)
+                return true;
+
             switch(msg.what){
                 case FILTER_PIC:
-
-                    if(mUIHandler == null)
-                        break;
-
                     try {
                         int filter = msg.arg1;
                         File picFile = (File)msg.obj;
@@ -143,6 +155,26 @@ public class FilterService extends Service {
                     } catch (Exception e) {
                         Log.e(TAG, "IOException Frame:"+e);
                         e.printStackTrace();
+                    }
+                    break;
+                case FILTER_MULTIPLE_PICS:
+                    List<SelfieBean> selfies = (List<SelfieBean>)msg.obj;
+                    List<Integer> filterTypes = msg.getData().getIntegerArrayList("filters_extra");
+                    for(SelfieBean selfie: selfies){
+                        for(Integer type : filterTypes){
+                            selfie.setFilterType(type);
+                            response = mSelfieServerApi.getImage(selfie);
+                            if(response != null && response.getEncodedImage() != null) {
+                                Bitmap bitmap = Util.decodeBase64(response.getEncodedImage());
+                                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), sMatrix, true);
+                                Message uiMsg = mUIHandler.obtainMessage(MainActivity.PICTURE_FILTERED, bitmap);
+                                Bundle respBundle = new Bundle();
+                                respBundle.putString("name", response.getName());
+                                respBundle.putInt("type", response.getFilterType());
+                                uiMsg.setData(respBundle);
+                                mUIHandler.sendMessage(uiMsg);
+                            }
+                        }
                     }
                     break;
                 case END_SERVICE:

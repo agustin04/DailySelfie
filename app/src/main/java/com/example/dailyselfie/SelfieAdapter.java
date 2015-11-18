@@ -142,12 +142,13 @@ public class SelfieAdapter extends BaseAdapter{
 	    for (File file : files) {
 	        if (file.isFile()) {
 				if(mFilterType == MainActivity.FilterType.GRAY || mFilterType == MainActivity.FilterType.SEPIA) {
-					if (file.getName().endsWith(filterEnding+".jpg")) {
+					if (file.getName().contains(filterEnding)) {
 						list.add(0, new Selfie(file));
 					}
 				} else if (mFilterType == MainActivity.FilterType.DEFAULT){
 					if (file.getName().endsWith(".jpg") &&
-							!file.getName().endsWith(MainActivity.FILTER_SEPIA_ENDING+".jpg")) {
+							!file.getName().contains(MainActivity.FILTER_GRAY_ENDING) &&
+							!file.getName().contains(MainActivity.FILTER_SEPIA_ENDING)) {
 						list.add(0, new Selfie(file));
 					}
 				} else {

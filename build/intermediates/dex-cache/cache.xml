@@ -2,18 +2,25 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\libs\internal_impl-22.2.1.jar"
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit\retrofit\1.9.0\a681c044244d9fc375198588297a39ba78028423\retrofit-1.9.0.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
-        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.1-7ded87a51a9f45b7d0d19db05f1ffb256aec87a2.jar" />
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\retrofit-1.9.0-b928b8d377d364004b65914409fc8a213787139f.jar" />
     </item>
     <item
-        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3.1\ecb6e1f8e4b0e84c4b886c2f14a1500caf309757\gson-2.3.1.jar"
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.3.0\1b355f73402020c5a0dcca58affc3ec3dfeabac1\okio-1.3.0.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\gson-2.3.1-3ea520d1ba1f0bf9253660ffa57b69a70b8a84fe.jar" />
+        sha1="1b355f73402020c5a0dcca58affc3ec3dfeabac1">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\okio-1.3.0-23b6cba800eb42df22f9fe8ca8e7c8e3aca3fd12.jar" />
+    </item>
+    <item
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.3.0\2e7bc7033dc2c8423e661224171b3133fb155b28\okhttp-2.3.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="2e7bc7033dc2c8423e661224171b3133fb155b28">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\okhttp-2.3.0-319c2b9e42644266c7299b9ad0f1bb84b1e74064.jar" />
     </item>
     <item
         jar="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\classes.jar"
@@ -23,18 +30,25 @@
         <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\classes-c02890e51ad20c88ba4ecc511a49f764456a7ac2.jar" />
     </item>
     <item
-        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit\retrofit\1.9.0\a681c044244d9fc375198588297a39ba78028423\retrofit-1.9.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="a681c044244d9fc375198588297a39ba78028423">
-        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\retrofit-1.9.0-b928b8d377d364004b65914409fc8a213787139f.jar" />
-    </item>
-    <item
         jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.2.0\6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd\bolts-android-1.2.0.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd">
         <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\bolts-android-1.2.0-b590e2e4c6ad743e25be32436d644e291c41bd29.jar" />
+    </item>
+    <item
+        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3.1\ecb6e1f8e4b0e84c4b886c2f14a1500caf309757\gson-2.3.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\gson-2.3.1-3ea520d1ba1f0bf9253660ffa57b69a70b8a84fe.jar" />
+    </item>
+    <item
+        jar="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\libs\internal_impl-22.2.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
+        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.1-7ded87a51a9f45b7d0d19db05f1ffb256aec87a2.jar" />
     </item>
     <item
         jar="C:\dev\TOOLS\android_sdk\extras\android\m2repository\com\android\support\support-annotations\22.2.1\support-annotations-22.2.1.jar"
@@ -49,20 +63,6 @@
         revision="23.0.1"
         sha1="5bdb38b7e4b6094891648c1dc4dc08589b460f97">
         <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\classes-7b1f15681a0b27e08aee151f6029b063116c8e6c.jar" />
-    </item>
-    <item
-        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.3.0\2e7bc7033dc2c8423e661224171b3133fb155b28\okhttp-2.3.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="2e7bc7033dc2c8423e661224171b3133fb155b28">
-        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\okhttp-2.3.0-319c2b9e42644266c7299b9ad0f1bb84b1e74064.jar" />
-    </item>
-    <item
-        jar="C:\Users\sgarcia\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.3.0\1b355f73402020c5a0dcca58affc3ec3dfeabac1\okio-1.3.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="1b355f73402020c5a0dcca58affc3ec3dfeabac1">
-        <dex dex="C:\Users\sgarcia\AndroidStudioProjects\DailySelfie\app\build\intermediates\pre-dexed\debug\okio-1.3.0-23b6cba800eb42df22f9fe8ca8e7c8e3aca3fd12.jar" />
     </item>
 
 </items>

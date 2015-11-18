@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -122,7 +123,7 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 				Selfie selfie = mSelfieAdapter.getItem(position);
 				Intent intent = new Intent(MainActivity.this, FullPictureActivity.class);
 				intent.putExtra(FullPictureActivity.PICTURE_PATH_EXTRA, selfie.getSelfieFile().getAbsolutePath());
-				//MainActivity.this.applyFilter(selfie.getSelfieFile().getAbsolutePath(), SelfieServerApi.FILTER_GRAY);
+				//MainActivity.this.applyEffect(selfie.getSelfieFile().getAbsolutePath(), SelfieServerApi.FILTER_GRAY);
 				MainActivity.this.startActivity(intent);
 			}
 		});
@@ -192,11 +193,15 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 		}*/
 	}
 
-    public void applyFilter(String picturePath, int filter){
+    public void applyEffect(String picturePath, int filter){
         File picFile = new File(picturePath);
         mService.applyFilter(picFile, filter);
     }
 
+	public void applyEffects(List<SelfieBean> pics, List<Integer> filterTypes){
+		mService.applyEffects(pics, filterTypes);
+		Toast.makeText(this, "Applying effects", Toast.LENGTH_LONG);
+	}
 	private void dispatchTakePictureIntent() {
 		Log.i(TAG, "Taking picture");
 	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -257,7 +262,7 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 		}
 
 		if(id == R.id.action_filter){
-			final CharSequence[] items = {"Gray scale"," Sepia", "ALL", "Default"};
+			final CharSequence[] items = {"Gray scale"," Sepia", "All", "Default"};
 			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 			builder.setTitle(R.string.select_filter)
 					.setItems(R.array.filter_array, new DialogInterface.OnClickListener() {
@@ -382,6 +387,7 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		SparseBooleanArray selected = mSelfieAdapter
 				.getSelectedIds();
+		final List<Integer> effectIds = new ArrayList<Integer>();
 		switch (item.getItemId()) {
 			case R.id.delete:
 				for (int i = (selected.size() - 1); i >= 0; i--) {
@@ -389,6 +395,9 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 						Selfie selecteditem = mSelfieAdapter
 								.getItem(selected.keyAt(i));
 						mSelfieAdapter.remove(selecteditem);
+						try {
+							selecteditem.getSelfieFile().delete();
+						} catch(Exception e){}
 					}
 				}
 				mode.finish();
@@ -404,7 +413,7 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 						String encodedString = Util.encodeTobase64(selecteditem.getSelfiePicture());
 						bean.setName(selecteditem.getSelfieFile().getName());
 						bean.setEncodedImage(encodedString);
-						mSelfieAdapter.remove(selecteditem);
+						seletedItems.add(bean);
 					}
 				}
 
@@ -416,9 +425,9 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 							public void onClick(DialogInterface dialog, int indexSelected,
 												boolean isChecked) {
 								if (isChecked) {
-									//seletedItems.add(indexSelected);
-								} else if (seletedItems.contains(indexSelected)) {
-									//seletedItems.remove(Integer.valueOf(indexSelected));
+									effectIds.add(indexSelected+1);
+								} else if (effectIds.contains(indexSelected+1)) {
+									effectIds.remove(Integer.valueOf(indexSelected+1));
 								}
 							}
 						})
@@ -426,13 +435,12 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								userCancel = false;
+								MainActivity.this.applyEffects(seletedItems, effectIds);
 							}
 						})
 						.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								userCancel = true;
 							}
 						});
 
@@ -450,7 +458,8 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 		mSelfieAdapter.removeSelection();
 	}
 
-	private static class UIHandler extends Handler{
+	@SuppressLint("HandlerLeak")
+	private class UIHandler extends Handler{
 
 		public UIHandler(){
 
@@ -460,17 +469,22 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 			switch(msg.what) {
                 case PICTURE_FILTERED:
                     Bitmap picture = (Bitmap) msg.obj;
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    String imageFileName = "JPEG_" + timeStamp + "_";
-                    File storageDir = Environment.getExternalStoragePublicDirectory(
-                           Environment.DIRECTORY_PICTURES+"/DailySelfie");
+					Bundle bundle = msg.getData();
+					String imageFileName = bundle.getString("name");
+					int type = bundle.getInt("type");
+					switch(type){
+						case 1:
+							imageFileName+= FILTER_GRAY_ENDING;
+							break;
+						case 2:
+							imageFileName+= FILTER_SEPIA_ENDING;
+							break;
+					}
+                    File storageDir = MainActivity.this.SELFIE_DIR;
                     File image = null;
                     try {
                         image = File.createTempFile(
-                                imageFileName,  /* prefix */
-                                ".jpg",         /* suffix */
-                                storageDir      /* directory */
-                        );
+                                imageFileName, ".jpg", storageDir);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -478,7 +492,7 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
                         FileOutputStream out = null;
                         try {
                             out = new FileOutputStream(image);
-                            picture.compress(Bitmap.CompressFormat.JPEG, 60, out); // bmp is your Bitmap instance
+                            picture.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
                             // PNG is a lossless format, the compression factor (100) is ignored
                         } catch (Exception e) {
                             e.printStackTrace();
