@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/context_delete"
-        android:title="delete" />
-    
-
-</menu>
-<!-- From: file:/C:/Users/sgarcia/AndroidStudioProjects/DailySelfie/app/src/main/res/menu/context_menu.xml -->
