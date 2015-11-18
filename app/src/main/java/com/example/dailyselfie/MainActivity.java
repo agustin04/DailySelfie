@@ -4,14 +4,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
@@ -39,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.dailyselfie.clientApi.SelfieBean;
 import com.example.dailyselfie.clientApi.SelfieServerApi;
 import com.example.dailyselfie.service.FilterService;
 import com.facebook.FacebookSdk;
@@ -70,6 +75,14 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 	private boolean mIsBound;
 	private static UIHandler mUIHandler;
 
+	public static enum FilterType {
+		DEFAULT,
+		GRAY,
+		SEPIA,
+		ALL;
+	}
+	public static final String FILTER_GRAY_ENDING = "_GRAY";
+	public static final String FILTER_SEPIA_ENDING = "_SEPIA";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -242,6 +255,36 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 			finish();
 			return true;
 		}
+
+		if(id == R.id.action_filter){
+			final CharSequence[] items = {"Gray scale"," Sepia", "ALL", "Default"};
+			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+			builder.setTitle(R.string.select_filter)
+					.setItems(R.array.filter_array, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							switch (which){
+								case 0:
+									//gray
+									mSelfieAdapter.setFilterType(FilterType.GRAY);
+									break;
+								case 1:
+									//sepia
+									mSelfieAdapter.setFilterType(FilterType.SEPIA);
+									break;
+								case 2:
+									//ALL
+									mSelfieAdapter.setFilterType(FilterType.ALL);
+									break;
+								default:
+									mSelfieAdapter.setFilterType(FilterType.DEFAULT);
+							}
+						}
+					});
+
+			AlertDialog dialog = builder.create();
+			dialog.show();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -334,23 +377,67 @@ public class MainActivity extends Activity implements AbsListView.MultiChoiceMod
 		return false;
 	}
 
+	private boolean userCancel = true;
 	@Override
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		SparseBooleanArray selected = mSelfieAdapter
+				.getSelectedIds();
 		switch (item.getItemId()) {
 			case R.id.delete:
-				// Calls getSelectedIds method from ListViewAdapter Class
-				SparseBooleanArray selected = mSelfieAdapter
-						.getSelectedIds();
-				// Captures all selected ids with a loop
 				for (int i = (selected.size() - 1); i >= 0; i--) {
 					if (selected.valueAt(i)) {
 						Selfie selecteditem = mSelfieAdapter
 								.getItem(selected.keyAt(i));
-						// Remove selected items following the ids
 						mSelfieAdapter.remove(selecteditem);
 					}
 				}
-				// Close CAB
+				mode.finish();
+				return true;
+			case R.id.filter:
+				final CharSequence[] items = {" Gray scale "," Sepia "};
+				final List<SelfieBean> seletedItems = new ArrayList<SelfieBean>();
+				for (int i = (selected.size() - 1); i >= 0; i--) {
+					if (selected.valueAt(i)) {
+						Selfie selecteditem = mSelfieAdapter
+								.getItem(selected.keyAt(i));
+						SelfieBean bean = new SelfieBean();
+						String encodedString = Util.encodeTobase64(selecteditem.getSelfiePicture());
+						bean.setName(selecteditem.getSelfieFile().getName());
+						bean.setEncodedImage(encodedString);
+						mSelfieAdapter.remove(selecteditem);
+					}
+				}
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("Select the desired effect");
+				builder.setMultiChoiceItems(items, null,
+						new DialogInterface.OnMultiChoiceClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int indexSelected,
+												boolean isChecked) {
+								if (isChecked) {
+									//seletedItems.add(indexSelected);
+								} else if (seletedItems.contains(indexSelected)) {
+									//seletedItems.remove(Integer.valueOf(indexSelected));
+								}
+							}
+						})
+						// Set the action buttons
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								userCancel = false;
+							}
+						})
+						.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								userCancel = true;
+							}
+						});
+
+				AlertDialog dialog = builder.create();
+				dialog.show();
 				mode.finish();
 				return true;
 			default:

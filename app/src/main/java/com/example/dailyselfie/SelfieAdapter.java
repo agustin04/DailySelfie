@@ -24,18 +24,27 @@ public class SelfieAdapter extends BaseAdapter{
 	private ArrayList<Selfie> list = new ArrayList<Selfie>();
 	private static LayoutInflater inflater = null;
 	private SparseBooleanArray mSelectedItemsIds;
+	private File mSelfieDir;
 	private Context mContext;
+	private MainActivity.FilterType mFilterType = MainActivity.FilterType.DEFAULT;
 	
-	public static final String NAME_FORMAT = "JPEG_yyyyMMdd_HHmmss";
+	public static final String NAME_FORMAT = "DS_yyyyMMdd_HHmmss";
 	
 	public SelfieAdapter(Context context, File selfieDir){
 		mContext = context;
 		inflater = LayoutInflater.from(mContext);
+		mSelfieDir = selfieDir;
 		mSelectedItemsIds = new SparseBooleanArray();
 		
-		getListFiles(selfieDir);
+		getListFiles(mSelfieDir);
 	}
-	
+
+	public void setFilterType(MainActivity.FilterType filterType) {
+		mFilterType = filterType;
+		removeAllViews();
+		getListFiles(mSelfieDir);
+
+	}
 	@Override
 	public int getCount() {
 		return list.size();
@@ -119,13 +128,33 @@ public class SelfieAdapter extends BaseAdapter{
 	}
 	
 	private void getListFiles(File parentDir) {
+		String filterEnding = "";
+		switch(mFilterType){
+			case GRAY:
+				filterEnding = MainActivity.FILTER_GRAY_ENDING;
+				break;
+			case SEPIA:
+				filterEnding = MainActivity.FILTER_SEPIA_ENDING;
+				break;
+		}
 	    File[] files = parentDir.listFiles();
         if(files != null && files.length > 0)
 	    for (File file : files) {
 	        if (file.isFile()) {
-	        	if(file.getName().endsWith(".jpg")){
-	                list.add(0,new Selfie(file));
-	            }
+				if(mFilterType == MainActivity.FilterType.GRAY || mFilterType == MainActivity.FilterType.SEPIA) {
+					if (file.getName().endsWith(filterEnding+".jpg")) {
+						list.add(0, new Selfie(file));
+					}
+				} else if (mFilterType == MainActivity.FilterType.DEFAULT){
+					if (file.getName().endsWith(".jpg") &&
+							!file.getName().endsWith(MainActivity.FILTER_SEPIA_ENDING+".jpg")) {
+						list.add(0, new Selfie(file));
+					}
+				} else {
+					if (file.getName().endsWith(".jpg")) {
+						list.add(0, new Selfie(file));
+					}
+				}
 	        }
 	    }
 	}
