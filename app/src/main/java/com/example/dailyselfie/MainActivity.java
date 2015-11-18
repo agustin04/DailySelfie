@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.ListActivity;
 import android.app.PendingIntent;
@@ -31,15 +32,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.dailyselfie.clientApi.SelfieServerApi;
 import com.example.dailyselfie.service.FilterService;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
-public class MainActivity extends ListActivity implements AbsListView.MultiChoiceModeListener{
+public class MainActivity extends Activity implements AbsListView.MultiChoiceModeListener{
 
 	private static final String TAG = "DailySelfie";
 	static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -49,6 +54,7 @@ public class MainActivity extends ListActivity implements AbsListView.MultiChoic
     private String userId;
     private int loginType;
 
+	private GridView gridView;
 	private SelfieAdapter mSelfieAdapter;
 
 	private File mLastPictureFile; 
@@ -81,7 +87,8 @@ public class MainActivity extends ListActivity implements AbsListView.MultiChoic
 	}
 
 	private void init() {
-		ListView listView = getListView();
+		gridView = (GridView) findViewById(R.id.list);
+		//ListView listView = getListView();
 
 		bindCollaborationService();
 
@@ -93,10 +100,20 @@ public class MainActivity extends ListActivity implements AbsListView.MultiChoic
         SELFIE_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/DailySelfie/"+userId);
 
 		mSelfieAdapter = new SelfieAdapter(this, SELFIE_DIR);
-		listView.setAdapter(mSelfieAdapter);
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		listView.setMultiChoiceModeListener(this);
-		registerForContextMenu(listView);
+		gridView.setAdapter(mSelfieAdapter);
+		gridView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		gridView.setMultiChoiceModeListener(this);
+		gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				Selfie selfie = mSelfieAdapter.getItem(position);
+				Intent intent = new Intent(MainActivity.this, FullPictureActivity.class);
+				intent.putExtra(FullPictureActivity.PICTURE_PATH_EXTRA, selfie.getSelfieFile().getAbsolutePath());
+				//MainActivity.this.applyFilter(selfie.getSelfieFile().getAbsolutePath(), SelfieServerApi.FILTER_GRAY);
+				MainActivity.this.startActivity(intent);
+			}
+		});
+		registerForContextMenu(gridView);
 		setAlarms();
 
 	}
@@ -298,8 +315,8 @@ public class MainActivity extends ListActivity implements AbsListView.MultiChoic
 	@Override
 	public void onItemCheckedStateChanged(ActionMode mode,
 										  int position, long id, boolean checked) {
-		ListView list = getListView();
-		final int checkedCount = list.getCheckedItemCount();
+		//ListView list = getListView();
+		final int checkedCount = gridView.getCheckedItemCount();
 		// Set the CAB title according to total checked items
 		mode.setTitle(checkedCount + " Selected");
 		// Calls toggleSelection method from ListViewAdapter Class

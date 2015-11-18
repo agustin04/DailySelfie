@@ -64,7 +64,7 @@ public class SelfieAdapter extends BaseAdapter{
 			holder = new ViewHolder();
 			newView = inflater.inflate(R.layout.picture_item, null);
 			holder.imageView = (ImageView) newView.findViewById(R.id.pic_image);
-			holder.textView = (TextView) newView.findViewById(R.id.pic_name);
+			//holder.textView = (TextView) newView.findViewById(R.id.pic_name);
 			newView.setTag(holder);
 			
 		} else {
@@ -73,19 +73,7 @@ public class SelfieAdapter extends BaseAdapter{
 		
 		//holder.imageView
 		setPic(holder.imageView, curr);
-		holder.textView.setText(getNameFromFile(curr.getSelfieFile()));
-		
-		/*newView.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				//Intent intent = new Intent(mContext, FullPictureActivity.class);
-				//intent.putExtra(FullPictureActivity.PICTURE_PATH_EXTRA, curr.getSelfieFile().getAbsolutePath());
-				((MainActivity)mContext).applyFilter(curr.getSelfieFile().getAbsolutePath(), SelfieServerApi.FILTER_GRAY);
-				
-				//mContext.startActivity(intent);
-			}
-		});*/
+		//holder.textView.setText(getNameFromFile(curr.getSelfieFile()));
 		
 		return newView;
 	}

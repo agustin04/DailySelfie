@@ -8,13 +8,9 @@
     <ImageView
         android:id="@+id/pic_image"
         android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"/>
 
-    <TextView
-        android:id="@+id/pic_name"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.20"
-        android:text="hola"/>
 
 </LinearLayout><!-- From: file:/C:/Users/sgarcia/AndroidStudioProjects/DailySelfie/app/src/main/res/layout/picture_item.xml -->
