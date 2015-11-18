@@ -53,7 +53,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     compile("com.google.guava:guava:17.0")
 }
-
+mainClassName = 'com.example.sgarcia.selfieserver.backend.Application'
 
 appengine {
     downloadSdk = true
