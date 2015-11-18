@@ -13,6 +13,8 @@ import android.os.Message;
 import android.util.Log;
 
 import com.example.dailyselfie.MainActivity;
+import com.example.dailyselfie.Util;
+import com.example.dailyselfie.clientApi.SelfieBean;
 import com.example.dailyselfie.clientApi.SelfieServerApi;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -47,7 +49,7 @@ public class FilterService extends Service {
         //Setting Collaboration Service for REST communication
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(new OkClient(okHttpClient))
-                        //.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(SelfieServerApi.SERVER_URL)
                 .build();
 
@@ -112,7 +114,7 @@ public class FilterService extends Service {
         @Override
         public boolean handleMessage(Message msg) {
 
-            Response response = null;
+            SelfieBean response = null;
             switch(msg.what){
                 case FILTER_PIC:
 
@@ -122,18 +124,25 @@ public class FilterService extends Service {
                     try {
                         int filter = msg.arg1;
                         File picFile = (File)msg.obj;
-                        response = mSelfieServerApi.getImage("filter", new TypedFile("image/jpeg", picFile));
-                        if(response != null && response.getBody() != null) {
-                            Bitmap bitmap = BitmapFactory.decodeStream(response.getBody().in());
+                        //String rp = mSelfieServerApi.getImage();
+                        //Log.d(TAG, "response GET:"+rp);
+                        SelfieBean selfieBean = new SelfieBean();
+                        selfieBean.setName(picFile.getName());
+                        selfieBean.setFilterType(1);
+
+                        String encodedPic = Util.encodeTobase64(Util.getImageFromDisc(picFile.getAbsolutePath()));
+                        selfieBean.setEncodedImage(encodedPic);
+                        response = mSelfieServerApi.getImage(selfieBean);
+                        if(response != null && response.getEncodedImage() != null) {
+                            Bitmap bitmap = Util.decodeBase64(response.getEncodedImage());
                             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), sMatrix, true);
                             Message uiMsg = mUIHandler.obtainMessage(MainActivity.PICTURE_FILTERED, bitmap);
                             mUIHandler.sendMessage(uiMsg);
                         }
-                    } catch (IOException e) {
+                        Log.d(TAG, "bean:"+response);
+                    } catch (Exception e) {
                         Log.e(TAG, "IOException Frame:"+e);
                         e.printStackTrace();
-                    }catch(NullPointerException e){
-                        Log.e(TAG, "NullPointerException Frame:"+e);
                     }
                     break;
                 case END_SERVICE:

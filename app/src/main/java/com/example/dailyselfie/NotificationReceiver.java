@@ -14,7 +14,7 @@ public class NotificationReceiver extends BroadcastReceiver{
 	
 	// Notification Text Elements
 	private final CharSequence tickerText = "Time for another selfie!";
-	private final CharSequence contentTitle = "Daily Selfie";
+	private final CharSequence contentTitle = "Daily SelfieBean";
 	private final CharSequence contentText = "Time for another selfie";
 	
 	private long[] mVibratePattern = { 0, 200, 200, 300 };
