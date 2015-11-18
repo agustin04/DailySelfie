@@ -22,12 +22,15 @@ import android.os.IBinder;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,7 +39,7 @@ import com.example.dailyselfie.service.FilterService;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity implements AbsListView.MultiChoiceModeListener{
 
 	private static final String TAG = "DailySelfie";
 	static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -50,11 +53,10 @@ public class MainActivity extends ListActivity {
 
 	private File mLastPictureFile; 
 
-	private static final long INITIAL_ALARM_DELAY = 2 * 60 * 1000L;
+	private static final long INITIAL_ALARM_DELAY = 24 * 60 * 60 * 1000L;
 	private AlarmManager mAlarmManager;
 	private Intent mNotificationReceiverIntent;
 	private PendingIntent mNotificationReceiverPendingIntent;
-    private ImageView logoutBtn;
 
     public static final int PICTURE_FILTERED = 1;
 	//Bindings with the communication service class
@@ -92,16 +94,8 @@ public class MainActivity extends ListActivity {
 
 		mSelfieAdapter = new SelfieAdapter(this, SELFIE_DIR);
 		listView.setAdapter(mSelfieAdapter);
-        logoutBtn = (ImageView) findViewById(R.id.logout_btn);
-		logoutBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				LoginManager.getInstance().logOut();
-				Intent login = new Intent(MainActivity.this, LoginActivity.class);
-				startActivity(login);
-				finish();
-            }
-		});
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		listView.setMultiChoiceModeListener(this);
 		registerForContextMenu(listView);
 		setAlarms();
 
@@ -121,8 +115,8 @@ public class MainActivity extends ListActivity {
 				
 		// Set single alarm
 		mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + INITIAL_ALARM_DELAY, INITIAL_ALARM_DELAY,
-                mNotificationReceiverPendingIntent);
+				System.currentTimeMillis() + INITIAL_ALARM_DELAY, INITIAL_ALARM_DELAY,
+				mNotificationReceiverPendingIntent);
 	}
 
 	private File createImageFile() throws IOException {
@@ -174,7 +168,7 @@ public class MainActivity extends ListActivity {
     }
 
 	private void dispatchTakePictureIntent() {
-		Log.i(TAG,"Taking picture");
+		Log.i(TAG, "Taking picture");
 	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    // Ensure that there's a camera activity to handle the intent
 	    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -220,6 +214,15 @@ public class MainActivity extends ListActivity {
 		if(id == R.id.action_camera){
 			
 			dispatchTakePictureIntent();
+			return true;
+		}
+		if(id == R.id.action_logout) {
+			if (loginType == LoginActivity.LOGIN_TYPE_FACEBOOK) {
+				LoginManager.getInstance().logOut();
+			}
+			Intent login = new Intent(MainActivity.this, LoginActivity.class);
+			startActivity(login);
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -292,6 +295,57 @@ public class MainActivity extends ListActivity {
 		}
 	}
 
+	@Override
+	public void onItemCheckedStateChanged(ActionMode mode,
+										  int position, long id, boolean checked) {
+		ListView list = getListView();
+		final int checkedCount = list.getCheckedItemCount();
+		// Set the CAB title according to total checked items
+		mode.setTitle(checkedCount + " Selected");
+		// Calls toggleSelection method from ListViewAdapter Class
+		mSelfieAdapter.toggleSelection(position);
+	}
+
+	@Override
+	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+		mode.getMenuInflater().inflate(R.menu.selection_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+		return false;
+	}
+
+	@Override
+	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.delete:
+				// Calls getSelectedIds method from ListViewAdapter Class
+				SparseBooleanArray selected = mSelfieAdapter
+						.getSelectedIds();
+				// Captures all selected ids with a loop
+				for (int i = (selected.size() - 1); i >= 0; i--) {
+					if (selected.valueAt(i)) {
+						Selfie selecteditem = mSelfieAdapter
+								.getItem(selected.keyAt(i));
+						// Remove selected items following the ids
+						mSelfieAdapter.remove(selecteditem);
+					}
+				}
+				// Close CAB
+				mode.finish();
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	@Override
+	public void onDestroyActionMode(ActionMode actionMode) {
+		mSelfieAdapter.removeSelection();
+	}
+
 	private static class UIHandler extends Handler{
 
 		public UIHandler(){
@@ -338,4 +392,6 @@ public class MainActivity extends ListActivity {
 			}
 		};
 	};
+
+
 }

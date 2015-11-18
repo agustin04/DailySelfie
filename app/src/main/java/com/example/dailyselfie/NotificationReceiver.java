@@ -26,7 +26,7 @@ public class NotificationReceiver extends BroadcastReceiver{
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// The Intent to be used when the user clicks on the Notification View
-				mNotificationIntent = new Intent(context, MainActivity.class);
+				mNotificationIntent = new Intent(context, LoginActivity.class);
 
 				// The PendingIntent that wraps the underlying Intent
 				mContentIntent = PendingIntent.getActivity(context, 0,

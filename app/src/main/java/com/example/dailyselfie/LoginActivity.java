@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.Button;
 // Add this to the header of your file:
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -15,6 +17,7 @@ import com.facebook.login.widget.LoginButton;
 
 public class LoginActivity extends Activity {
     LoginButton loginButton;
+    Button loginGuest;
     CallbackManager callbackManager;
     public static final int LOGIN_TYPE_FACEBOOK = 0;
     public static final int LOGIN_TYPE_GUEST = 1;
@@ -33,6 +36,8 @@ public class LoginActivity extends Activity {
 
         loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("user_friends");
+
+        loginGuest = (Button) findViewById(R.id.login_guest);
 
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -53,6 +58,14 @@ public class LoginActivity extends Activity {
                 // App code
                 setResult(Activity.RESULT_CANCELED);
                 finish();
+            }
+        });
+
+        loginGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String userId = "guest";
+                startDailySelfie(userId, LOGIN_TYPE_GUEST);
             }
         });
     }

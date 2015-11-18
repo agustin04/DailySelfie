@@ -8,5 +8,10 @@
         android:icon="@drawable/ic_menu_camera"
         android:title="@string/action_settings"/>
 
+    <item
+        android:id="@+id/action_logout"
+        android:showAsAction="collapseActionView"
+        android:title="logout"/>
+
 </menu>
 <!-- From: file:/C:/Users/sgarcia/AndroidStudioProjects/DailySelfie/app/src/main/res/menu/main.xml -->

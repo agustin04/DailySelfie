@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class SelfieAdapter extends BaseAdapter{
 
 	private ArrayList<Selfie> list = new ArrayList<Selfie>();
 	private static LayoutInflater inflater = null;
+	private SparseBooleanArray mSelectedItemsIds;
 	private Context mContext;
 	
 	public static final String NAME_FORMAT = "JPEG_yyyyMMdd_HHmmss";
@@ -29,6 +31,7 @@ public class SelfieAdapter extends BaseAdapter{
 	public SelfieAdapter(Context context, File selfieDir){
 		mContext = context;
 		inflater = LayoutInflater.from(mContext);
+		mSelectedItemsIds = new SparseBooleanArray();
 		
 		getListFiles(selfieDir);
 	}
@@ -39,9 +42,10 @@ public class SelfieAdapter extends BaseAdapter{
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public Selfie getItem(int position) {
 		return list.get(position);
 	}
+
 
 	@Override
 	public long getItemId(int position) {
@@ -71,7 +75,7 @@ public class SelfieAdapter extends BaseAdapter{
 		setPic(holder.imageView, curr);
 		holder.textView.setText(getNameFromFile(curr.getSelfieFile()));
 		
-		newView.setOnClickListener(new View.OnClickListener() {
+		/*newView.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -81,7 +85,7 @@ public class SelfieAdapter extends BaseAdapter{
 				
 				//mContext.startActivity(intent);
 			}
-		});
+		});*/
 		
 		return newView;
 	}
@@ -147,10 +151,40 @@ public class SelfieAdapter extends BaseAdapter{
 	public ArrayList<Selfie> getList(){
 		return list;
 	}
-	
+
+	public void remove(Selfie object) {
+		list.remove(object);
+		notifyDataSetChanged();
+	}
+
 	public void removeAllViews(){
 		list.clear();
 		this.notifyDataSetChanged();
+	}
+
+	public void toggleSelection(int position) {
+		selectView(position, !mSelectedItemsIds.get(position));
+	}
+
+	public void removeSelection() {
+		mSelectedItemsIds = new SparseBooleanArray();
+		notifyDataSetChanged();
+	}
+
+	public void selectView(int position, boolean value) {
+		if (value)
+			mSelectedItemsIds.put(position, value);
+		else
+			mSelectedItemsIds.delete(position);
+		notifyDataSetChanged();
+	}
+
+	public int getSelectedCount() {
+		return mSelectedItemsIds.size();
+	}
+
+	public SparseBooleanArray getSelectedIds() {
+		return mSelectedItemsIds;
 	}
 
 	static class ViewHolder{
